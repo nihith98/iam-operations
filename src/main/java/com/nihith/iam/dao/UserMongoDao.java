@@ -97,6 +97,28 @@ public class UserMongoDao implements UserIAMService {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>Queries the {@value #USER_COLLECTION_NAME} collection by userId and
+     * returns the first matching document deserialised into a {@link User}, or
+     * {@code null} when no match is found.</p>
+     */
+    @Override
+    public User findByUserId(String userId) throws IAMException {
+        logger.info("Entered findByUserId");
+        try {
+            List<User> users = mongoDBOperations.fetchRecordsWithFilter(
+                    mongoDBOperations.getCollection(USER_COLLECTION_NAME),
+                    UserQueryBuilder.filterByUserId(userId),
+                    User.class);
+            logger.info("Exiting findByUserId");
+            return users.isEmpty() ? null : users.get(0);
+        } catch (MongoException e) {
+            throwIAMException(e);
+            return null;
+        }
+    }
+
+    /**
      * Logs and rethrows a {@link MongoException} as an {@link IAMException}.
      *
      * @param e the MongoDB exception encountered

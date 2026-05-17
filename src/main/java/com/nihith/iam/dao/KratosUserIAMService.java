@@ -76,4 +76,14 @@ public class KratosUserIAMService implements UserIAMService {
         logger.info("Entered findByEmail (Kratos backend)");
         throw new IAMException("Kratos findByEmail is not yet implemented");
     }
+
+    /**
+     * {@inheritDoc}
+     * <p>Not yet implemented — Kratos backend wiring is staged for a later phase.</p>
+     */
+    @Override
+    public User findByUserId(String userId) throws IAMException {
+        logger.info("Entered findByUserId (Kratos backend)");
+        throw new IAMException("Kratos findByUserId is not yet implemented");
+    }
 }

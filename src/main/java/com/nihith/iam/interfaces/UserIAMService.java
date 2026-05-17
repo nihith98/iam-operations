@@ -37,4 +37,14 @@ public interface UserIAMService {
      * @throws IAMException if a data store or upstream error occurs
      */
     User findByEmail(String email) throws IAMException;
+
+    /**
+     * Retrieves a user by their unique user ID. Used by {@code /auth/refresh}
+     * to validate that the user still exists when refreshing a token.
+     *
+     * @param userId the user ID to look up
+     * @return the matching {@link User}, or {@code null} if not found
+     * @throws IAMException if a data store or upstream error occurs
+     */
+    User findByUserId(String userId) throws IAMException;
 }
