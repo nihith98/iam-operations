@@ -19,4 +19,25 @@ public interface TokenIAMService {
      * @throws IAMException if a data store error occurs
      */
     boolean createToken(Token token) throws IAMException;
+
+    /**
+     * Retrieves a refresh-token record by its SHA-256 hash.
+     *
+     * @param tokenHash the SHA-256 digest of the raw refresh token
+     * @return the matching {@link Token}, or {@code null} if not found
+     * @throws IAMException if a data store error occurs
+     */
+    Token findByTokenHash(String tokenHash) throws IAMException;
+
+    /**
+     * Atomically revokes the old refresh-token record and inserts a new one.
+     * This method must ensure the old record is marked revoked before the new
+     * record is inserted, to prevent a gap where both are valid.
+     *
+     * @param oldTokenHash the SHA-256 hash of the token being revoked
+     * @param newToken     the new token record to insert
+     * @return {@code true} if both operations succeeded, {@code false} otherwise
+     * @throws IAMException if a data store error occurs
+     */
+    boolean refreshToken(String oldTokenHash, Token newToken) throws IAMException;
 }
