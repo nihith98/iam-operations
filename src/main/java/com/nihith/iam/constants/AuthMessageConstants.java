@@ -13,6 +13,7 @@ public class AuthMessageConstants {
     public static final String USER_CREATION_FAILURE = "User Creation Failed";
     public static final String TOKEN_CREATION_FAILURE = "Token Creation Failed";
     public static final String LOGIN_FAILURE = "Login Failed";
+    public static final String INVALID_REFRESH_TOKEN = "Invalid or expired refresh token";
 
     /* Success Messages */
     public static final String USER_CREATION_SUCCESS = "User Registered Successfully";
