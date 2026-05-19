@@ -50,13 +50,4 @@ public interface UserIAMService {
      * @throws IAMException if a data store error occurs
      */
     boolean usernameExists(String username) throws IAMException;
-
-    /**
-     * Retrieves a user by their email address.
-     *
-     * @param email the email to look up
-     * @return the matching {@link User}, or {@code null} if not found
-     * @throws IAMException if a data store or upstream error occurs
-     */
-    User findByEmail(String email) throws IAMException;
 }

@@ -23,7 +23,9 @@ public class UserQueryBuilder {
     }
 
     /**
-     * Builds a filter matching a user by their unique {@code username}.
+     * Builds a filter matching a user by their unique {@code username}. This filter
+     * is used by the login flow — the client-supplied {@code userId} in the login
+     * request maps to the {@code username} field in the data store.
      *
      * @param username the username
      * @return a filter on the username field
@@ -31,18 +33,6 @@ public class UserQueryBuilder {
     public static BasicDBObject filterByUsername(String username) {
         BasicDBObject filter = new BasicDBObject();
         filter.put(IAMFieldNameConstants.USERNAME, username);
-        return filter;
-    }
-
-    /**
-     * Builds a filter matching a user by their unique {@code email}.
-     *
-     * @param email the email address
-     * @return a filter on the email field
-     */
-    public static BasicDBObject filterByEmail(String email) {
-        BasicDBObject filter = new BasicDBObject();
-        filter.put(IAMFieldNameConstants.EMAIL, email);
         return filter;
     }
 

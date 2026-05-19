@@ -161,7 +161,6 @@ public class MongoDBOperationsTest {
         Document doc = new Document()
                 .append("userId", "u-1")
                 .append("username", "alice")
-                .append("email", "alice@example.com")
                 .append("passwordHash", "h");
 
         when(mongoCollection.find(any(BasicDBObject.class))).thenReturn(findIterable);

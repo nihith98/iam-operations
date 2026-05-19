@@ -1,20 +1,20 @@
 package com.nihith.iam.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 
 /**
- * Request payload received by {@code POST /auth/login}. The {@code platform},
- * {@code userAgent}, and {@code ipAddress} fields are populated server-side
- * from request headers and are not expected from the client body.
+ * Request payload received by {@code POST /auth/login}. The {@code userId} field
+ * holds the human-readable username the user chose at registration — it is not the
+ * internal UUID. The {@code platform}, {@code userAgent}, and {@code ipAddress}
+ * fields are populated server-side from request headers and are not expected from
+ * the client body.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginRequest {
 
     @NotEmpty
-    @Email
-    private String email;
+    private String userId;
 
     @NotEmpty
     private String password;
@@ -26,17 +26,17 @@ public class LoginRequest {
     public LoginRequest() {
     }
 
-    public LoginRequest(String email, String password) {
-        this.email = email;
+    public LoginRequest(String userId, String password) {
+        this.userId = userId;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {
@@ -74,7 +74,7 @@ public class LoginRequest {
     @Override
     public String toString() {
         return "LoginRequest{" +
-                "email='" + email + '\'' +
+                "userId='" + userId + '\'' +
                 ", platform='" + platform + '\'' +
                 '}';
     }

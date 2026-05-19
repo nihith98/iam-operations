@@ -120,28 +120,6 @@ public class UserMongoDao implements UserIAMService {
     }
 
     /**
-     * {@inheritDoc}
-     * <p>Queries the {@value #USER_COLLECTION_NAME} collection by email and
-     * returns the first matching document deserialised into a {@link User}, or
-     * {@code null} when no match is found.</p>
-     */
-    @Override
-    public User findByEmail(String email) throws IAMException {
-        logger.info("Entered findByEmail");
-        try {
-            List<User> users = mongoDBOperations.fetchRecordsWithFilter(
-                    mongoDBOperations.getCollection(USER_COLLECTION_NAME),
-                    UserQueryBuilder.filterByEmail(email),
-                    User.class);
-            logger.info("Exiting findByEmail");
-            return users.isEmpty() ? null : users.get(0);
-        } catch (MongoException e) {
-            throwIAMException(e);
-            return null;
-        }
-    }
-
-    /**
      * Logs and rethrows a {@link MongoException} as an {@link IAMException}.
      *
      * @param e the MongoDB exception encountered

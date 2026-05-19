@@ -79,16 +79,6 @@ public class KratosUserIAMService implements UserIAMService {
 
     /**
      * {@inheritDoc}
-     * <p>Not yet implemented — Kratos backend wiring is staged for a later phase.</p>
-     */
-    @Override
-    public User findByEmail(String email) throws IAMException {
-        logger.info("Entered findByEmail (Kratos backend)");
-        throw new IAMException("Kratos findByEmail is not yet implemented");
-    }
-
-    /**
-     * {@inheritDoc}
      * <p>Deferred to Phase 2 (Kratos integration). Currently throws an exception
      * indicating that Kratos support for registration is not yet implemented.</p>
      */

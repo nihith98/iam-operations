@@ -109,6 +109,28 @@ public class TokenMongoDao implements TokenIAMService {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>Deletes the token document matching the given tokenHash from the
+     * {@value #TOKEN_COLLECTION_NAME} collection. The operation is idempotent —
+     * a zero-match delete is treated identically to a one-match delete.</p>
+     */
+    @Override
+    public boolean revokeToken(String tokenHash) throws IAMException {
+        logger.info("Entered revokeToken");
+        try {
+            com.mongodb.client.MongoCollection<Document> collection =
+                    mongoDBOperations.getCollection(TOKEN_COLLECTION_NAME);
+            Document filter = new Document("tokenHash", tokenHash);
+            collection.deleteOne(filter);
+            logger.info("Exiting revokeToken");
+            return true;
+        } catch (MongoException e) {
+            throwIAMException(e);
+            return false;
+        }
+    }
+
+    /**
      * Logs and rethrows a {@link MongoException} as an {@link IAMException}.
      *
      * @param e the MongoDB exception encountered

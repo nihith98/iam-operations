@@ -17,7 +17,7 @@ public class ObjectMapperUtilTest {
     @Test
     void castToDocument_ValidUser_ReturnsDocumentWithFields() {
         // Arrange
-        User user = new User("u-1", "alice", "alice@example.com", "hash");
+        User user = new User("u-1", "alice", "hash");
 
         // Act
         Document document = ObjectMapperUtil.castToDocument(user);
@@ -26,7 +26,6 @@ public class ObjectMapperUtilTest {
         assertNotNull(document);
         assertEquals("u-1", document.getString("userId"));
         assertEquals("alice", document.getString("username"));
-        assertEquals("alice@example.com", document.getString("email"));
     }
 
     @Test
@@ -35,7 +34,6 @@ public class ObjectMapperUtilTest {
         Document document = new Document()
                 .append("userId", "u-2")
                 .append("username", "bob")
-                .append("email", "bob@example.com")
                 .append("passwordHash", "h");
 
         // Act
@@ -44,14 +42,13 @@ public class ObjectMapperUtilTest {
         // Assert
         assertEquals("u-2", user.getUserId());
         assertEquals("bob", user.getUsername());
-        assertEquals("bob@example.com", user.getEmail());
     }
 
     @Test
     void castToObject_MalformedJson_ThrowsIAMException() {
         // Arrange — Document with an int where User.username expects a string would
         // still coerce via Jackson; instead use an explicitly invalid Class<T> target.
-        Document document = new Document("userId", "u-3").append("username", "ok").append("email", "e@x").append("passwordHash", "h");
+        Document document = new Document("userId", "u-3").append("username", "ok").append("passwordHash", "h");
 
         // Act + Assert — trying to deserialize into a class with no matching shape
         assertThrows(IAMException.class, () -> ObjectMapperUtil.castToObject(document, java.net.URI.class));
@@ -61,8 +58,8 @@ public class ObjectMapperUtilTest {
     void castToDocumentList_ListOfUsers_ReturnsListOfDocuments() {
         // Arrange
         List<User> users = List.of(
-                new User("u-1", "alice", "alice@example.com", "h1"),
-                new User("u-2", "bob", "bob@example.com", "h2"));
+                new User("u-1", "alice", "h1"),
+                new User("u-2", "bob", "h2"));
 
         // Act
         List<Document> documents = ObjectMapperUtil.castToDocumentList(users);

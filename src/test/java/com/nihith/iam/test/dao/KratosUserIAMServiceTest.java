@@ -35,7 +35,7 @@ public class KratosUserIAMServiceTest {
     void createUser_NotYetImplemented_ThrowsIAMException() {
         // Act + Assert
         assertThrows(IAMException.class,
-                () -> kratosUserIAMService.createUser(new User("u-1", "alice", "alice@example.com", "h")));
+                () -> kratosUserIAMService.createUser(new User("u-1", "alice", "h")));
     }
 
     @Test
@@ -44,9 +44,4 @@ public class KratosUserIAMServiceTest {
         assertThrows(IAMException.class, () -> kratosUserIAMService.findByUsername("alice"));
     }
 
-    @Test
-    void findByEmail_NotYetImplemented_ThrowsIAMException() {
-        // Act + Assert
-        assertThrows(IAMException.class, () -> kratosUserIAMService.findByEmail("alice@example.com"));
-    }
 }

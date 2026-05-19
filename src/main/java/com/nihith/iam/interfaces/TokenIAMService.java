@@ -40,4 +40,17 @@ public interface TokenIAMService {
      * @throws IAMException if a data store error occurs
      */
     boolean refreshToken(String oldTokenHash, Token newToken) throws IAMException;
+
+    /**
+     * Deletes the refresh-token record identified by its SHA-256 hash.
+     * This operation is idempotent — if no record matches the hash the method
+     * returns {@code true} without error, so callers should not rely on the
+     * return value to infer whether a token was actually present.
+     *
+     * @param tokenHash the SHA-256 digest of the raw refresh token to revoke
+     * @return {@code true} if the operation completed without error (including
+     *         when no matching record existed), {@code false} otherwise
+     * @throws IAMException if a data store error occurs
+     */
+    boolean revokeToken(String tokenHash) throws IAMException;
 }

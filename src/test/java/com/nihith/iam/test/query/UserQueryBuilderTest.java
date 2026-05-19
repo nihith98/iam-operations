@@ -1,7 +1,6 @@
 package com.nihith.iam.test.query;
 
 import com.mongodb.BasicDBObject;
-import com.nihith.iam.constants.IAMFieldNameConstants;
 import com.nihith.iam.model.TokenStatus;
 import com.nihith.iam.query.UserQueryBuilder;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ public class UserQueryBuilderTest {
         BasicDBObject filter = UserQueryBuilder.filterByUserId("u-1");
 
         // Assert
-        assertEquals("u-1", filter.getString(IAMFieldNameConstants.USER_ID));
+        assertEquals("u-1", filter.getString("userId"));
         assertEquals(1, filter.size());
     }
 
@@ -26,17 +25,7 @@ public class UserQueryBuilderTest {
         BasicDBObject filter = UserQueryBuilder.filterByUsername("alice");
 
         // Assert
-        assertEquals("alice", filter.getString(IAMFieldNameConstants.USERNAME));
-        assertEquals(1, filter.size());
-    }
-
-    @Test
-    void filterByEmail_ValidEmail_ReturnsFilterOnEmailField() {
-        // Act
-        BasicDBObject filter = UserQueryBuilder.filterByEmail("alice@example.com");
-
-        // Assert
-        assertEquals("alice@example.com", filter.getString(IAMFieldNameConstants.EMAIL));
+        assertEquals("alice", filter.getString("username"));
         assertEquals(1, filter.size());
     }
 
@@ -46,8 +35,8 @@ public class UserQueryBuilderTest {
         BasicDBObject filter = UserQueryBuilder.filterActiveTokensByUserId("u-1");
 
         // Assert
-        assertEquals("u-1", filter.getString(IAMFieldNameConstants.USER_ID));
-        assertEquals(TokenStatus.ACTIVE.toString(), filter.getString(IAMFieldNameConstants.TOKEN_STATUS));
+        assertEquals("u-1", filter.getString("userId"));
+        assertEquals(TokenStatus.ACTIVE.toString(), filter.getString("tokenStatus"));
         assertEquals(2, filter.size());
     }
 }
