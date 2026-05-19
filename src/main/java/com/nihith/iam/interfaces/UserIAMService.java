@@ -20,23 +20,15 @@ public interface UserIAMService {
     boolean createUser(User user) throws IAMException;
 
     /**
-     * Retrieves a user by their unique username.
+     * Retrieves a user by their unique username. This is the primary lookup used
+     * by {@code POST /auth/login} — the {@code userId} field of the login request
+     * holds the human-readable username the user chose at registration.
      *
      * @param username the username to look up
      * @return the matching {@link User}, or {@code null} if not found
      * @throws IAMException if a data store or upstream error occurs
      */
     User findByUsername(String username) throws IAMException;
-
-    /**
-     * Retrieves a user by their unique email address. Used by {@code /auth/login}
-     * since the login request is keyed on email per the design spec.
-     *
-     * @param email the email address to look up
-     * @return the matching {@link User}, or {@code null} if not found
-     * @throws IAMException if a data store or upstream error occurs
-     */
-    User findByEmail(String email) throws IAMException;
 
     /**
      * Retrieves a user by their unique user ID. Used by {@code /auth/refresh}
@@ -47,4 +39,24 @@ public interface UserIAMService {
      * @throws IAMException if a data store or upstream error occurs
      */
     User findByUserId(String userId) throws IAMException;
+
+    /**
+     * Checks whether a username already exists in the user store.
+     * Used during registration to detect duplicate usernames and prevent
+     * enumeration attacks by returning a generic error.
+     *
+     * @param username the username to check
+     * @return {@code true} if username exists, {@code false} if available
+     * @throws IAMException if a data store error occurs
+     */
+    boolean usernameExists(String username) throws IAMException;
+
+    /**
+     * Retrieves a user by their email address.
+     *
+     * @param email the email to look up
+     * @return the matching {@link User}, or {@code null} if not found
+     * @throws IAMException if a data store or upstream error occurs
+     */
+    User findByEmail(String email) throws IAMException;
 }
