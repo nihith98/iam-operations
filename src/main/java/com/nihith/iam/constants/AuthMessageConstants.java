@@ -19,4 +19,8 @@ public class AuthMessageConstants {
     public static final String USER_CREATION_SUCCESS = "User Registered Successfully";
     public static final String LOGIN_SUCCESS = "Login Successful";
     public static final String LOGOUT_SUCCESS = "Logged Out Successfully";
+
+    /* Registration Messages */
+    public static final String REGISTRATION_SUCCESS = "User Registered Successfully";
+    public static final String REGISTRATION_INVALID_DATA = "Unable to complete registration. Please check your username and password and try again.";
 }
