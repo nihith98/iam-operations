@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,7 +53,7 @@ public class UserMongoDaoTest {
         when(mongoDBOperations.insertSingleDocument(eq(mongoCollection), any(Document.class))).thenReturn(true);
 
         // Act
-        boolean result = userMongoDao.createUser(new User("u-1", "alice", "alice@example.com", "h"));
+        boolean result = userMongoDao.createUser(new User("u-1", "alice", "h"));
 
         // Assert
         assertTrue(result);
@@ -68,7 +69,7 @@ public class UserMongoDaoTest {
 
         // Act + Assert
         assertThrows(IAMException.class,
-                () -> userMongoDao.createUser(new User("u-1", "alice", "alice@example.com", "h")));
+                () -> userMongoDao.createUser(new User("u-1", "alice", "h")));
     }
 
     @Test
@@ -76,7 +77,7 @@ public class UserMongoDaoTest {
         // Arrange
         when(mongoDBOperations.getCollection(UserMongoDao.USER_COLLECTION_NAME)).thenReturn(mongoCollection);
         when(mongoDBOperations.fetchRecordsWithFilter(eq(mongoCollection), any(BasicDBObject.class), eq(User.class)))
-                .thenReturn(List.of(new User("u-1", "alice", "alice@example.com", "h")));
+                .thenReturn(List.of(new User("u-1", "alice", "h")));
 
         // Act
         User result = userMongoDao.findByUsername("alice");
@@ -108,38 +109,55 @@ public class UserMongoDaoTest {
     }
 
     @Test
-    void findByEmail_ExistingEmail_ReturnsUser() {
+    void usernameExists_UsernameFound_ReturnsTrue() {
         // Arrange
+        String username = "existing_user";
+        User existingUser = new User("user-123", username, "hashedPassword");
         when(mongoDBOperations.getCollection(UserMongoDao.USER_COLLECTION_NAME)).thenReturn(mongoCollection);
-        when(mongoDBOperations.fetchRecordsWithFilter(eq(mongoCollection), any(BasicDBObject.class), eq(User.class)))
-                .thenReturn(List.of(new User("u-1", "alice", "alice@example.com", "h")));
+        when(mongoDBOperations.fetchRecordsWithFilter(
+                eq(mongoCollection),
+                any(BasicDBObject.class),
+                eq(User.class)))
+            .thenReturn(List.of(existingUser));
 
         // Act
-        User result = userMongoDao.findByEmail("alice@example.com");
+        boolean result = userMongoDao.usernameExists(username);
 
         // Assert
-        assertEquals("alice@example.com", result.getEmail());
+        assertEquals(true, result, "usernameExists should return true when username is found");
     }
 
     @Test
-    void findByEmail_Missing_ReturnsNull() {
+    void usernameExists_UsernameNotFound_ReturnsFalse() {
         // Arrange
+        String username = "nonexistent_user";
         when(mongoDBOperations.getCollection(UserMongoDao.USER_COLLECTION_NAME)).thenReturn(mongoCollection);
-        when(mongoDBOperations.fetchRecordsWithFilter(eq(mongoCollection), any(BasicDBObject.class), eq(User.class)))
-                .thenReturn(List.of());
+        when(mongoDBOperations.fetchRecordsWithFilter(
+                eq(mongoCollection),
+                any(BasicDBObject.class),
+                eq(User.class)))
+            .thenReturn(List.of());
 
-        // Act + Assert
-        assertNull(userMongoDao.findByEmail("missing@example.com"));
+        // Act
+        boolean result = userMongoDao.usernameExists(username);
+
+        // Assert
+        assertEquals(false, result, "usernameExists should return false when username is not found");
     }
 
     @Test
-    void findByEmail_MongoException_ThrowsIAMException() {
+    void usernameExists_MongoException_ThrowsIAMException() {
         // Arrange
+        String username = "any_user";
         when(mongoDBOperations.getCollection(UserMongoDao.USER_COLLECTION_NAME)).thenReturn(mongoCollection);
-        when(mongoDBOperations.fetchRecordsWithFilter(eq(mongoCollection), any(BasicDBObject.class), eq(User.class)))
-                .thenThrow(new MongoException("boom"));
+        when(mongoDBOperations.fetchRecordsWithFilter(
+                eq(mongoCollection),
+                any(BasicDBObject.class),
+                eq(User.class)))
+            .thenThrow(new MongoException("Connection failed"));
 
-        // Act + Assert
-        assertThrows(IAMException.class, () -> userMongoDao.findByEmail("alice@example.com"));
+        // Act & Assert
+        assertThrows(IAMException.class, () -> userMongoDao.usernameExists(username),
+                "usernameExists should throw IAMException when MongoException occurs");
     }
 }

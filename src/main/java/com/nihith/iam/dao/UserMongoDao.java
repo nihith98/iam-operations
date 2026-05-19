@@ -76,28 +76,6 @@ public class UserMongoDao implements UserIAMService {
 
     /**
      * {@inheritDoc}
-     * <p>Queries the {@value #USER_COLLECTION_NAME} collection by email and
-     * returns the first matching document deserialised into a {@link User}, or
-     * {@code null} when no match is found.</p>
-     */
-    @Override
-    public User findByEmail(String email) throws IAMException {
-        logger.info("Entered findByEmail");
-        try {
-            List<User> users = mongoDBOperations.fetchRecordsWithFilter(
-                    mongoDBOperations.getCollection(USER_COLLECTION_NAME),
-                    UserQueryBuilder.filterByEmail(email),
-                    User.class);
-            logger.info("Exiting findByEmail");
-            return users.isEmpty() ? null : users.get(0);
-        } catch (MongoException e) {
-            throwIAMException(e);
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
      * <p>Queries the {@value #USER_COLLECTION_NAME} collection by userId and
      * returns the first matching document deserialised into a {@link User}, or
      * {@code null} when no match is found.</p>
@@ -111,6 +89,51 @@ public class UserMongoDao implements UserIAMService {
                     UserQueryBuilder.filterByUserId(userId),
                     User.class);
             logger.info("Exiting findByUserId");
+            return users.isEmpty() ? null : users.get(0);
+        } catch (MongoException e) {
+            throwIAMException(e);
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>Queries the {@value #USER_COLLECTION_NAME} collection by username to determine
+     * if the username is already registered. Returns {@code true} if at least one
+     * user document matches the username, {@code false} if the collection is empty
+     * for that username.</p>
+     */
+    @Override
+    public boolean usernameExists(String username) throws IAMException {
+        logger.info("Entered usernameExists");
+        try {
+            List<User> users = mongoDBOperations.fetchRecordsWithFilter(
+                    mongoDBOperations.getCollection(USER_COLLECTION_NAME),
+                    UserQueryBuilder.filterByUsername(username),
+                    User.class);
+            logger.info("Exiting usernameExists");
+            return !users.isEmpty();
+        } catch (MongoException e) {
+            throwIAMException(e);
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>Queries the {@value #USER_COLLECTION_NAME} collection by email and
+     * returns the first matching document deserialised into a {@link User}, or
+     * {@code null} when no match is found.</p>
+     */
+    @Override
+    public User findByEmail(String email) throws IAMException {
+        logger.info("Entered findByEmail");
+        try {
+            List<User> users = mongoDBOperations.fetchRecordsWithFilter(
+                    mongoDBOperations.getCollection(USER_COLLECTION_NAME),
+                    UserQueryBuilder.filterByEmail(email),
+                    User.class);
+            logger.info("Exiting findByEmail");
             return users.isEmpty() ? null : users.get(0);
         } catch (MongoException e) {
             throwIAMException(e);
