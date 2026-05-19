@@ -72,9 +72,9 @@ public class KratosUserIAMService implements UserIAMService {
      * <p>Not yet implemented — Kratos backend wiring is staged for a later phase.</p>
      */
     @Override
-    public User findByEmail(String email) throws IAMException {
-        logger.info("Entered findByEmail (Kratos backend)");
-        throw new IAMException("Kratos findByEmail is not yet implemented");
+    public User findByUserId(String userId) throws IAMException {
+        logger.info("Entered findByUserId (Kratos backend)");
+        throw new IAMException("Kratos findByUserId is not yet implemented");
     }
 
     /**
@@ -82,8 +82,19 @@ public class KratosUserIAMService implements UserIAMService {
      * <p>Not yet implemented — Kratos backend wiring is staged for a later phase.</p>
      */
     @Override
-    public User findByUserId(String userId) throws IAMException {
-        logger.info("Entered findByUserId (Kratos backend)");
-        throw new IAMException("Kratos findByUserId is not yet implemented");
+    public User findByEmail(String email) throws IAMException {
+        logger.info("Entered findByEmail (Kratos backend)");
+        throw new IAMException("Kratos findByEmail is not yet implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>Deferred to Phase 2 (Kratos integration). Currently throws an exception
+     * indicating that Kratos support for registration is not yet implemented.</p>
+     */
+    @Override
+    public boolean usernameExists(String username) throws IAMException {
+        logger.info("Entered usernameExists (Kratos) — not yet implemented");
+        throw new IAMException("Kratos registration support deferred to Phase 2");
     }
 }
