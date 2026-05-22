@@ -173,4 +173,44 @@ public class JwtUtilTest {
         assertNotNull(EnvironmentUtil.getEnvironmentVariable(JwtUtil.KEYSTORE_ALIAS));
         assertEquals("test-issuer", EnvironmentUtil.getEnvironmentVariable(JwtUtil.JWT_ISSUER));
     }
+
+    @Test
+    void generateAccessToken_WithDisplayName_IncludesDisplayNameAndUserIdClaims() {
+        // Arrange
+        User user = new User("u-123", "alice", "hash", "Alice Johnson");
+        user.setRoles(List.of(new Role("r-1", "admin")));
+
+        // Act
+        String token = jwtUtil.generateAccessToken(user);
+
+        // Assert
+        Claims claims = Jwts.parser()
+                .verifyWith(jwtUtil.getPublicKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        assertEquals("u-123", claims.get("userId", String.class));
+        assertEquals("Alice Johnson", claims.get("displayName", String.class));
+    }
+
+    @Test
+    void generateAccessToken_WithoutDisplayName_DefaultsDisplayNameToUsername() {
+        // Arrange
+        User user = new User("u-456", "bob", "hash");
+        user.setRoles(List.of(new Role("r-2", "user")));
+
+        // Act
+        String token = jwtUtil.generateAccessToken(user);
+
+        // Assert
+        Claims claims = Jwts.parser()
+                .verifyWith(jwtUtil.getPublicKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        assertEquals("u-456", claims.get("userId", String.class));
+        assertEquals("bob", claims.get("displayName", String.class));
+    }
 }

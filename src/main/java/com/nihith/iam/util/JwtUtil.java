@@ -131,9 +131,9 @@ public class JwtUtil {
 
     /**
      * Signs a short-lived access token for the supplied {@link User} carrying the
-     * subject, username, roles, issued-at, expiry, JWT id, and {@code kid} header.
-     * No email or other PII is included in the token per the platform branding
-     * philosophy (minimal PII: username only).
+     * subject, username, roles, userId, displayName, issued-at, expiry, JWT id,
+     * and {@code kid} header. No email or other PII is included in the token per
+     * the platform branding philosophy (minimal PII: username only).
      *
      * @param user the authenticated user to mint a token for
      * @return the compact serialised JWT
@@ -144,12 +144,15 @@ public class JwtUtil {
             Instant now = Instant.now();
             Instant exp = now.plusSeconds(ACCESS_TOKEN_TTL_SECONDS);
 
+            // BUG FIX: Add displayName and userId as explicit JWT claims for client access
             return Jwts.builder()
                     .header().keyId(DEFAULT_KEY_ID).and()
                     .id(UUID.randomUUID().toString())
                     .issuer(this.issuer)
                     .subject(user.getUserId())
                     .claim("username", user.getUsername())
+                    .claim("userId", user.getUserId())
+                    .claim("displayName", user.getDisplayName() != null ? user.getDisplayName() : user.getUsername())
                     .claim("roles", extractRoleNames(user.getRoles()))
                     .issuedAt(Date.from(now))
                     .expiration(Date.from(exp))

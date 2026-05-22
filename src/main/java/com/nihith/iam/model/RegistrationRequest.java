@@ -21,6 +21,7 @@ public class RegistrationRequest {
     @Size(min = 8, max = 255, message = "Password must be between 8 and 255 characters")
     private String password;
 
+    private String displayName;
     private String platform;
     private String userAgent;
     private String ipAddress;
@@ -48,6 +49,14 @@ public class RegistrationRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getPlatform() {
